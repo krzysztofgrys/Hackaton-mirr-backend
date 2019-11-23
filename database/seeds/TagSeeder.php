@@ -5,7 +5,6 @@ use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
 {
-
     const TAGS = [
         ['name' => 'Osoba w podeszłym wieku', 'slug' => 'osoba-w-podeszlym-wieku'],
         ['name' => 'Osoba z niepełnosprawnością ruchową', 'slug' => 'osoba-z-niepelnosprawnocia-ruchowa'],

@@ -19,3 +19,4 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('posts', \App\Http\Controllers\PostController::class);
     Route::resource('tags', 'TagController', ['only' => ['index']]);
 });
+Route::resource('categories', 'CategoryController', ['only' => ['index']]);
