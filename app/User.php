@@ -25,7 +25,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'api_token', 'email_verified_at'
     ];
 
     /**
@@ -38,8 +38,17 @@ class User extends Authenticatable
         'date_of_birth' => 'date'
     ];
 
+    protected $appends = [
+        'address'
+    ];
+
     public function address()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(Address::class, 'addresses_id');
+    }
+
+    public function getAddressAttribute(): Address
+    {
+        return $this->address()->first();
     }
 }
