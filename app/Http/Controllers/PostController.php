@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Address;
+use App\Category;
 use App\Post;
 use App\User;
 use Carbon\Carbon;
@@ -33,7 +34,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -50,7 +51,7 @@ class PostController extends Controller
             'email' => $request->post('email'),
         ]);
         $post->user()->associate($user);
-        if($post->external){
+        if ($post->external) {
             $requestAddress = $request->post('address');
             $address = Address::create([
                 'city' => $requestAddress['city'],
@@ -60,16 +61,22 @@ class PostController extends Controller
                 'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point($requestAddress['lat'], $requestAddress['lng']),
             ]);
             $post->address()->associate($address);
-        }else{
+        } else {
             $post->address()->associate($user->address);
         }
+
+        $category = Category::findOrFail($request->post('category_id'));
+        $post->category()->associate($category);
         $post->save();
+        if ($request->has('tags')) {
+            $post->tags()->sync($request->post('tags'));
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Post  $post
+     * @param \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
@@ -80,34 +87,34 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Post  $post
+     * @param \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post)
     {
-        //
+        abort(404);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Post $post)
     {
-        //
+        abort(404);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Post  $post
+     * @param \App\Post $post
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post)
     {
-        //
+        abort(404);
     }
 }
