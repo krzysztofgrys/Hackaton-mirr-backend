@@ -19,4 +19,5 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('posts', 'PostController', ['only' => ['index', 'store', 'show']]);
     Route::resource('tags', 'TagController', ['only' => ['index']]);
     Route::resource('categories', 'CategoryController', ['only' => ['index']]);
+    Route::get('phone-number/{post}', 'PostController@getNumber');
 });

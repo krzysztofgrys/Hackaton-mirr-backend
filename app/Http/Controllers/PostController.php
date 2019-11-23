@@ -111,4 +111,10 @@ class PostController extends Controller
     {
         return $post;
     }
+
+    public function getNumber(Post $post)
+    {
+        activity()->log('Lookup for post ' . $post->id);
+        return $post->phone_number;
+    }
 }
