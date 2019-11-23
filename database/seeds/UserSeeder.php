@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         User::firstOrCreate([
             'email' => 'user@bezinteresowni.pl',
         ], [
-            'password' => 'useruser',
+            'password' => Hash::make('useruser'),
             'first_name' => 'przykładowy',
             'last_name' => 'użytkownik',
             'date_of_birth' => new \DateTime('23-11-1969'),
