@@ -29,7 +29,7 @@ class Post extends Model implements HasMedia
 
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, 'posts_tags');
     }
 
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo

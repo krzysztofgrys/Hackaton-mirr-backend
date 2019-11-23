@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Address;
 use App\Jobs\AddAltToMedia;
 use App\Post;
+use App\Tag;
 use App\User;
 use Carbon\Carbon;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class PostController extends Controller
 {
@@ -16,9 +20,38 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Post::all();
+        $tags = $this->getIdsFromParam($request, 'tags');
+        $categories= $this->getIdsFromParam($request, 'categories');
+        $lat = $request->input('lat', null);
+        $lng = $request->input('lng', null);
+        $distance = $request->input('distance', 20000);
+
+        $query = Post::query();
+        if ($tags->isNotEmpty()) {
+            $query->whereHas('tags', function (Builder $query) use ($tags) {
+                $query->whereIn('id', $tags);
+            });
+        }
+        if ($categories->isNotEmpty()) {
+            $query->whereHas('category', function (Builder $query) use ($categories) {
+                $query->whereIn('id', $categories);
+            });
+        }
+
+        if ($lat && $lng) {
+            $query->whereHas('address', function (Builder $query) use ($lat, $lng, $distance) {
+                $query->distanceSphere('coordinates', new Point($lat, $lng), (int) $distance);
+            });
+        }
+
+        return $query->get();
+    }
+
+    public function getIdsFromParam(Request $request, string $field): Collection
+    {
+        return collect(explode(",", $request->input($field, '')))->filter();
     }
 
     /**
