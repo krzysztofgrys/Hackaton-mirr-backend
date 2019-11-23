@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
@@ -12,7 +13,7 @@ class Post extends Model implements HasMedia
     use HasMediaTrait, Searchable;
 
     protected $appends = [
-        'address'
+        'address', 'tags', 'category'
     ];
 
 
@@ -47,6 +48,7 @@ class Post extends Model implements HasMedia
     {
         $array = parent::toArray();
         $array['photo'] = $this->getFirstMedia()->getFullUrl();
+        $array['phone_number'] = substr($this->phone_number, 0, 3);
         return $array;
     }
 
