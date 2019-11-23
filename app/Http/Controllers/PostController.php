@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Address;
-use App\Category;
 use App\Post;
 use App\User;
 use Carbon\Carbon;
@@ -40,18 +39,8 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $user = User::whereApiToken($request->get('token'))->first();
-        $post = Post::create([
-            'title' => $request->post('title'),
-            'description' => $request->post('title'),
-            'external' => $request->post('external'),
-            'start_at' => Carbon::parse($request->post('start_at')),
-            'end_at' => Carbon::parse($request->post('end_at')),
-            'name' => $request->post('name'),
-            'phone' => phone($request->post('phone')),
-            'email' => $request->post('email'),
-        ]);
-        $post->user()->associate($user);
-        if ($post->external) {
+
+        if ($request->has('external')) {
             $requestAddress = $request->post('address');
             $address = Address::create([
                 'city' => $requestAddress['city'],
@@ -60,13 +49,24 @@ class PostController extends Controller
                 'house_number' => $requestAddress['house_number'],
                 'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point($requestAddress['lat'], $requestAddress['lng']),
             ]);
-            $post->address()->associate($address);
         } else {
-            $post->address()->associate($user->address);
+            $address = $user->address;
         }
 
-        $category = Category::findOrFail($request->post('category_id'));
-        $post->category()->associate($category);
+        $post = Post::make([
+            'title' => $request->post('title'),
+            'description' => $request->post('title'),
+            'external' => $request->has('external') ? true : false,
+            'start_at' => Carbon::parse($request->post('start_at')),
+            'end_at' => Carbon::parse($request->post('end_at')),
+            'name' => $request->post('name'),
+            'phone' => phone($request->post('phone')),
+            'email' => $request->post('email'),
+            'user_id' => $user->id,
+            'category_id' => $request->post('category_id'),
+            'address_id' => $address->id
+        ]);
+
         $post->save();
         if ($request->has('tags')) {
             $post->tags()->sync($request->post('tags'));
