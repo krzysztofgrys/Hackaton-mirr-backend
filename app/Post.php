@@ -10,6 +10,13 @@ class Post extends Model implements HasMedia
 {
     use HasMediaTrait;
 
+    protected $appends = [
+        'address'
+    ];
+
+
+    protected $fillable = ['title', 'description', 'external', 'start_at', 'end_at', 'name', 'phone', 'email', 'user_id', 'category_id', 'address_id'];
+
     public function address(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Address::class);
@@ -28,5 +35,17 @@ class Post extends Model implements HasMedia
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getAddressAttribute(): Address
+    {
+        return $this->address()->first();
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $array['photo'] = $this->getFirstMedia()->getFullUrl();
+        return $array;
     }
 }
