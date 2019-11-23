@@ -37,4 +37,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'date_of_birth' => 'date'
     ];
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
 }
