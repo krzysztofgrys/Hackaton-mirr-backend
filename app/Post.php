@@ -41,7 +41,7 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(Category::class);
     }
 
-    public function getAddressAttribute(): Address
+    public function getAddressAttribute(): ?Address
     {
         return $this->address()->first();
     }
@@ -58,9 +58,10 @@ class Post extends Model implements HasMedia
 
     public function toArray()
     {
+        $media = $this->getFirstMedia();
         $array = parent::toArray();
-        $array['photo'] = $this->getFirstMedia()->getFullUrl();
-        $array['photo_alt'] = $this->getFirstMedia()->getCustomProperty('alt');
+        $array['photo'] = $media ? $media->getFullUrl() : '';
+        $array['photo_alt'] = $media ? $media->getCustomProperty('alt') : '';
         $array['phone_number'] = substr($this->phone_number, 0, 6);
         return $array;
     }
