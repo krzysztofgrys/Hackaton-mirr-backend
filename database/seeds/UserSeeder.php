@@ -18,10 +18,12 @@ class UserSeeder extends Seeder
             'zip_code' => '53-030',
             'street' => 'Pl Powstańców Śląskich',
             'house_number' => '7',
+        ], [
             'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point(51.21, 17.2),
         ]);
         User::firstOrCreate([
             'email' => 'user@bezinteresowni.pl',
+        ], [
             'password' => 'useruser',
             'first_name' => 'przykładowy',
             'last_name' => 'użytkownik',
