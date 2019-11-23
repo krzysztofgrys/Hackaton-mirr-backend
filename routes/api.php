@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 Route::post('/login', 'LoginController@login');
 
 Route::middleware('auth:api')->group(function () {
-    Route::resource('posts', \App\Http\Controllers\PostController::class, ['only' => ['index', 'store', 'show']]);
+    Route::resource('posts', 'PostController', ['only' => ['index', 'store', 'show']]);
     Route::resource('tags', 'TagController', ['only' => ['index']]);
     Route::resource('categories', 'CategoryController', ['only' => ['index']]);
 });

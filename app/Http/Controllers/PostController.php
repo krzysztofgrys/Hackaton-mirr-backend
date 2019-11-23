@@ -50,7 +50,7 @@ class PostController extends Controller
             'start_at' => Carbon::parse($request->post('start_at')),
             'end_at' => Carbon::parse($request->post('end_at')),
             'name' => $request->post('name'),
-            'phone' => phone($request->post('phone')),
+            'phone' => phone($request->post('phone'), 'pl'),
             'email' => $request->post('email'),
             'user_id' => $user->id,
             'category_id' => $request->post('category_id'),
