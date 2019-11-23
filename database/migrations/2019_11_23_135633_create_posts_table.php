@@ -23,7 +23,7 @@ class CreatePostsTable extends Migration
             $table->dateTime('start_at');
             $table->dateTime('end_at');
             $table->string('name')->nullable();
-            $table->string('phone', 12)->nullable();
+            $table->string('phone_number', 12)->nullable();
             $table->string('email')->nullable();
             $table->timestamps();
 
