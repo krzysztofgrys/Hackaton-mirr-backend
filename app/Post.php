@@ -58,7 +58,8 @@ class Post extends Model implements HasMedia
     {
         $array = parent::toArray();
         $array['photo'] = $this->getFirstMedia()->getFullUrl();
-        $array['phone_number'] = substr($this->phone_number, 0, 3);
+        $array['photo_alt'] = $this->getFirstMedia()->getCustomProperty('alt');
+        $array['phone_number'] = substr($this->phone_number, 0, 6);
         return $array;
     }
 
