@@ -23,7 +23,7 @@ class Post extends Model implements HasMedia
 
     public function address(): BelongsTo
     {
-        return $this->belongsTo(Address::class, 'addresses_id');
+        return $this->belongsTo(Address::class, 'address_id');
     }
 
     public function user(): BelongsTo
@@ -77,8 +77,8 @@ class Post extends Model implements HasMedia
         return [
             'title' => $this->title,
             'description' => $this->description,
-            'city' => $address->city,
-            'street' => $address->street,
+            'city' => $address ? $address->city : '',
+            'street' => $address ? $address->street : '',
         ];
     }
 }
