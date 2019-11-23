@@ -40,7 +40,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $user = User::whereApiToken($request->get('token'))->first();
-        $post = Post::make([
+        $post = Post::create([
             'title' => $request->post('title'),
             'description' => $request->post('title'),
             'external' => $request->post('external'),
