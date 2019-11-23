@@ -44,6 +44,16 @@ class Post extends Model implements HasMedia
         return $this->address()->first();
     }
 
+    public function getTagsAttribute(): Collection
+    {
+        return $this->tags()->get();
+    }
+
+    public function getCategoryAttribute(): Category
+    {
+        return $this->category()->first();
+    }
+
     public function toArray()
     {
         $array = parent::toArray();
