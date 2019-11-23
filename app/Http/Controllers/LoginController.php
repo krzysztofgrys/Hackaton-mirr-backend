@@ -10,10 +10,11 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $user = User::where('email', $request->post('login'))->where('password', Hash::make($request->post('password')))->first();
-        if (!$user) {
+        $user = User::where('email', $request->post('email'))->firstOrFail();
+        if (!Hash::check($request->post('password'), $user->password)) {
             abort(403);
         }
+
         return $user;
     }
 }

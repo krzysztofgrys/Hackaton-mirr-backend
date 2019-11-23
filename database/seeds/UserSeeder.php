@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
         ], [
             'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point(51.21, 17.2),
         ]);
-        User::firstOrCreate([
+        $user = User::firstOrCreate([
             'email' => 'user@bezinteresowni.pl',
         ], [
             'password' => Hash::make('useruser'),
@@ -31,5 +31,7 @@ class UserSeeder extends Seeder
             'phone_number' => phone('123555789'),
             'addresses_id' => $address->id,
         ]);
+        $user->api_token = 'asdf';
+        $user->save();
     }
 }
