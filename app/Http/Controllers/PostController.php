@@ -20,6 +20,7 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
+        $searchQuery = $request->input('query');
         $tags = $this->getIdsFromParam($request, 'tags');
         $categories= $this->getIdsFromParam($request, 'categories');
         $lat = $request->input('lat', null);
@@ -27,6 +28,10 @@ class PostController extends Controller
         $distance = $request->input('distance', 20000);
 
         $query = Post::query();
+        if ($searchQuery) {
+            $ids = Post::search($searchQuery)->get()->pluck('id');
+            $query->whereIn('id', $ids);
+        }
         if ($tags->isNotEmpty()) {
             $query->whereHas('tags', function (Builder $query) use ($tags) {
                 $query->whereIn('id', $tags);
@@ -66,7 +71,7 @@ class PostController extends Controller
             'zip_code' => $requestAddress['zip_code'],
             'street' => $requestAddress['street'],
             'house_number' => $requestAddress['house_number'],
-            'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point($requestAddress['lat'], $requestAddress['lng']),
+            'coordinates' => new Point($requestAddress['lat'], $requestAddress['lng']),
         ]);
 
         /**

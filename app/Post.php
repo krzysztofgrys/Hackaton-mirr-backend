@@ -3,12 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 
 class Post extends Model implements HasMedia
 {
-    use HasMediaTrait;
+    use HasMediaTrait, Searchable;
 
     protected $appends = [
         'address'
@@ -47,5 +48,21 @@ class Post extends Model implements HasMedia
         $array = parent::toArray();
         $array['photo'] = $this->getFirstMedia()->getFullUrl();
         return $array;
+    }
+
+    public function searchableAs()
+    {
+        return 'posts';
+    }
+
+    public function toSearchableArray()
+    {
+        $address = $this->address()->first();
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'city' => $address->city,
+            'street' => $address->street,
+        ];
     }
 }
