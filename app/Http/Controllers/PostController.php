@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Address;
+use App\Jobs\AddAltToMedia;
 use App\Post;
 use App\User;
 use Carbon\Carbon;
@@ -43,6 +44,9 @@ class PostController extends Controller
             $address = $user->address;
         }
 
+        /**
+         * @var $post Post
+         */
         $post = Post::make([
             'title' => $request->post('title'),
             'description' => $request->post('title'),
@@ -61,7 +65,10 @@ class PostController extends Controller
         if ($request->has('tags')) {
             $post->tags()->sync($request->post('tags'));
         }
+
         $post->addMediaFromRequest('photo')->toMediaCollection();
+        $this->dispatch(new AddAltToMedia($post->getFirstMedia()));
+
         return response($post, 201);
     }
 
