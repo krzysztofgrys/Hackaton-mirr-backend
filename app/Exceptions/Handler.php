@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
         if ($request->wantsJson()) {
             // Define the response
             $response = [
-                'errors' => 'Sorry, something went wrong.',
+                'message' => 'Sorry, something went wrong.',
             ];
 
             // If the app is in debug mode

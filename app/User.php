@@ -44,10 +44,10 @@ class User extends Authenticatable
 
     public function address()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(Address::class, 'addresses_id');
     }
 
-    public function getAddressAttribute(): ?Address
+    public function getAddressAttribute(): Address
     {
         return $this->address()->first();
     }
