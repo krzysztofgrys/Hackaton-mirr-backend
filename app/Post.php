@@ -29,4 +29,11 @@ class Post extends Model implements HasMedia
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $array['photo'] = $this->getFirstMedia()->getFullUrl();
+        return $array;
+    }
 }

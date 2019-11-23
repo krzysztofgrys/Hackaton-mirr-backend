@@ -61,6 +61,8 @@ class PostController extends Controller
         if ($request->has('tags')) {
             $post->tags()->sync($request->post('tags'));
         }
+        $post->addMediaFromRequest('photo')->toMediaCollection();
+        return response($post, 201);
     }
 
     /**
