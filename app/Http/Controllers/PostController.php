@@ -42,6 +42,7 @@ class PostController extends Controller
 
         $query->distance($lat, $lng)
             ->distanceWithin($lat, $lng, $distance);
+        $query->orderBy('distance');
 
         return $query->get();
     }
