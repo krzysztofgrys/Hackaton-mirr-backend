@@ -22,9 +22,10 @@ class PostController extends Controller
     {
         $searchQuery = $request->input('query');
         $tags = $this->getIdsFromParam($request, 'tags');
-        $categories= $this->getIdsFromParam($request, 'categories');
-        $lat = $request->input('lat', null);
-        $lng = $request->input('lng', null);
+        $categories = $this->getIdsFromParam($request, 'categories');
+        $userCoordinates = $request->user()->address->coordinates;
+        $lat = $request->input('lat', $userCoordinates->getLat());
+        $lng = $request->input('lng', $userCoordinates->getLng());
         $distance = $request->input('distance', 20000);
 
         $query = Post::query();
@@ -33,21 +34,14 @@ class PostController extends Controller
             $query->whereIn('id', $ids);
         }
         if ($tags->isNotEmpty()) {
-            $query->whereHas('tags', function (Builder $query) use ($tags) {
-                $query->whereIn('id', $tags);
-            });
+            $query->tags($tags);
         }
         if ($categories->isNotEmpty()) {
-            $query->whereHas('category', function (Builder $query) use ($categories) {
-                $query->whereIn('id', $categories);
-            });
+            $query->categories($categories);
         }
 
-        if ($lat && $lng) {
-            $query->whereHas('address', function (Builder $query) use ($lat, $lng, $distance) {
-                $query->distanceSphere('coordinates', new Point($lat, $lng), (int) $distance);
-            });
-        }
+        $query->distance($lat, $lng)
+            ->distanceWithin($lat, $lng, $distance);
 
         return $query->get();
     }
@@ -61,6 +55,7 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -84,7 +79,7 @@ class PostController extends Controller
             'email' => $request->post('email'),
             'user_id' => $request->user()->id,
             'category_id' => $request->post('category_id'),
-            'address_id' => $address->id
+            'address_id' => $address->id,
         ]);
 
         $post->save();
@@ -104,6 +99,7 @@ class PostController extends Controller
      * Display the specified resource.
      *
      * @param \App\Post $post
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
@@ -114,6 +110,7 @@ class PostController extends Controller
     public function getNumber(Post $post)
     {
         activity()->log('Phone number lookup for post ' . $post->id);
+
         return $post->phone_number;
     }
 }

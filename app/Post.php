@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Grimzy\LaravelMysqlSpatial\Eloquent\Builder;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +19,7 @@ class Post extends Model implements HasMedia
     protected $appends = [
         'address', 'tags', 'category'
     ];
+
 
 
     protected $fillable = ['title', 'description', 'external', 'start_at', 'end_at', 'name', 'phone', 'email', 'user_id', 'category_id', 'address_id'];
@@ -54,6 +57,35 @@ class Post extends Model implements HasMedia
     public function getCategoryAttribute(): Category
     {
         return $this->category()->first();
+    }
+
+    public function scopeDistance($query, $lat, $lng)
+    {
+        return $query->selectRaw(
+            'posts.*, round(st_distance_sphere(addresses.coordinates, ST_GeomFromText(?))) as distance',
+            [(new Point($lat, $lng))->toWKT()]
+        )->join('addresses', 'posts.address_id', '=', 'addresses.id');
+    }
+
+    public function scopeDistanceWithin($query, $lat, $lng, $distance)
+    {
+        return $query->whereHas('address', function(Builder $query) use ($lat, $lng, $distance) {
+            $query->distanceSphere('coordinates', new Point($lat, $lng), (int) $distance);
+        });
+    }
+
+    public function scopeTags($query, $tags)
+    {
+        return $query->whereHas('tags', function(Builder $query) use ($tags) {
+            $query->whereIn('id', $tags);
+        });
+    }
+
+    public function scopeCategories($query, $categories)
+    {
+        return $query->whereHas('categories', function(Builder $query) use ($categories) {
+            $query->whereIn('id', $categories);
+        });
     }
 
     public function toArray()
