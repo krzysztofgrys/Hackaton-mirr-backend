@@ -26,6 +26,7 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
+        $faker = Faker\Factory::create('pl_PL');
         foreach (self::COORDS as [$city, $lat, $lng]) {
             $address = Address::firstOrCreate([
                 'city' => $city,
@@ -37,11 +38,11 @@ class PostSeeder extends Seeder
             $post = Post::firstOrCreate([
                 'title' => 'Potrzebna pomoc w ' . $city,
             ], [
-                'description' => 'Potrzebna pomoc w ' . $city,
+                'description' => $faker->paragraph,
                 'end_at' => Carbon::parse('20-12-2019'),
-                'name' => 'Janina Kowalska',
-                'phone_number' => phone('123456789', 'pl'),
-                'email' => Str::lower('email@' . $city . '.com'),
+                'name' => $faker->name,
+                'phone_number' => substr($faker->phoneNumber, 0, 11),
+                'email' => Str::lower($faker->email),
                 'user_id' => User::all()->random()->id,
                 'category_id' => Category::all()->random()->id,
                 'address_id' => $address->id
