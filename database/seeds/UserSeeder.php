@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             'street' => 'Pl Powstańców Śląskich',
             'house_number' => '7',
         ], [
-            'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point(51.21, 17.2),
+            'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point(51.09089993, 17.0154598),
         ]);
         $user = User::firstOrCreate([
             'email' => 'user@bezinteresowni.pl',

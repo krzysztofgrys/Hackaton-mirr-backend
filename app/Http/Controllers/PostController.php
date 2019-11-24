@@ -83,7 +83,7 @@ class PostController extends Controller
             'start_at' => Carbon::parse($request->post('start_at')),
             'end_at' => Carbon::parse($request->post('end_at')),
             'name' => $request->post('name'),
-            'phone' => phone($request->post('phone'), 'pl'),
+            'phone_number' => phone($request->post('phone'), 'pl'),
             'email' => $request->post('email'),
             'user_id' => $request->user()->id,
             'category_id' => $request->post('category_id'),
@@ -95,8 +95,10 @@ class PostController extends Controller
             $post->tags()->sync($request->post('tags'));
         }
 
-        $post->addMediaFromRequest('photo')->toMediaCollection();
-        $this->dispatch(new AddAltToMedia($post->getFirstMedia()));
+        if ($request->hasFile('photo')) {
+            $post->addMediaFromRequest('photo')->toMediaCollection();
+            $this->dispatch(new AddAltToMedia($post));
+        }
 
         return response($post, 201);
     }
