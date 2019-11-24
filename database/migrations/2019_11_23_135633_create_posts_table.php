@@ -19,8 +19,7 @@ class CreatePostsTable extends Migration
             $table->text('description');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('address_id');
-            $table->dateTime('start_at');
-            $table->dateTime('end_at');
+            $table->dateTime('end_at')->nullable();
             $table->string('name')->nullable();
             $table->string('phone_number', 12)->nullable();
             $table->string('email')->nullable();

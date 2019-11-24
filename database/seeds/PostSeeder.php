@@ -29,9 +29,7 @@ class PostSeeder extends Seeder
         foreach (self::COORDS as [$city, $lat, $lng]) {
             $address = Address::firstOrCreate([
                 'city' => $city,
-                'zip_code' => '53-030',
                 'street' => 'Pl Powstańców Śląskich',
-                'house_number' => '7',
             ], [
                 'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point($lat, $lng),
             ]);
@@ -40,7 +38,6 @@ class PostSeeder extends Seeder
                 'title' => 'Potrzebna pomoc w ' . $city,
             ], [
                 'description' => 'Potrzebna pomoc w ' . $city,
-                'start_at' => Carbon::parse('12-12-2019'),
                 'end_at' => Carbon::parse('20-12-2019'),
                 'name' => 'Janina Kowalska',
                 'phone_number' => phone('123456789', 'pl'),

@@ -2,6 +2,7 @@
 
 use App\Address;
 use App\User;
+use Grimzy\LaravelMysqlSpatial\Types\Point;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -15,11 +16,9 @@ class UserSeeder extends Seeder
     {
         $address = Address::firstOrCreate([
             'city' => 'Wrocław',
-            'zip_code' => '53-030',
             'street' => 'Pl Powstańców Śląskich',
-            'house_number' => '7',
         ], [
-            'coordinates' => new \Grimzy\LaravelMysqlSpatial\Types\Point(51.09089993, 17.0154598),
+            'coordinates' => new Point(51.09089993, 17.0154598),
         ]);
         $user = User::firstOrCreate([
             'email' => 'user@bezinteresowni.pl',

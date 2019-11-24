@@ -68,9 +68,7 @@ class PostController extends Controller
         $requestAddress = $request->post('address');
         $address = Address::create([
             'city' => $requestAddress['city'],
-            'zip_code' => $requestAddress['zip_code'],
             'street' => $requestAddress['street'],
-            'house_number' => $requestAddress['house_number'],
             'coordinates' => new Point($requestAddress['lat'], $requestAddress['lng']),
         ]);
 
@@ -80,7 +78,6 @@ class PostController extends Controller
         $post = Post::make([
             'title' => $request->post('title'),
             'description' => $request->post('title'),
-            'start_at' => Carbon::parse($request->post('start_at')),
             'end_at' => Carbon::parse($request->post('end_at')),
             'name' => $request->post('name'),
             'phone_number' => phone($request->post('phone'), 'pl'),
@@ -116,7 +113,7 @@ class PostController extends Controller
 
     public function getNumber(Post $post)
     {
-        activity()->log('Lookup for post ' . $post->id);
+        activity()->log('Phone number lookup for post ' . $post->id);
         return $post->phone_number;
     }
 }

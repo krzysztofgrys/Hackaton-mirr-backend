@@ -26,6 +26,7 @@ class Address extends Model
         $array =  parent::toArray();
         $array['lat'] = $this->coordinates->getLat();
         $array['lng'] = $this->coordinates->getLng();
+        unset($array['coordinates']);
 
         return $array;
     }
